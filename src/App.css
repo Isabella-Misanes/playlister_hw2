@@ -19,7 +19,7 @@ body {
 
 #root {
   background-color: var(--swatch-primary);
-  font-family: serif;
+  font-family: 'Tangerine', serif;
   position: absolute;
   width: 80%;
   left: 10%;
@@ -131,6 +131,28 @@ body {
 }
 
 .list-card-button {
+  float:right;
+  font-size:18pt;
+}
+
+.song-card {
+  font-size: 18pt;
+  margin: 10px;
+  padding: 20px;
+  border-radius: 25px;
+}
+
+.appearance-song-card {
+  background-color: var(--swatch-complement);
+}
+
+.song-card:hover {
+  cursor: pointer;
+  background-color: var(--swatch-contrast);
+  color:white;
+}
+
+.song-card-button {
   float:right;
   font-size:18pt;
 }
