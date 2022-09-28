@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export default class DeleteListModal extends Component {
+export default class DeleteSongModal extends Component {
     render() {
         const { listKeyPair, deleteListCallback, hideDeleteListModalCallback } = this.props;
         let name = "";
@@ -9,8 +9,8 @@ export default class DeleteListModal extends Component {
         }
         return (
             <div 
-                className="modal" 
-                id="delete-list-modal" 
+            className="modal" 
+                id="delete-song-modal" 
                 data-animation="slideInOutLeft">
                     <div className="modal-root" id='verify-delete-list-root'>
                         <div className="modal-north">
