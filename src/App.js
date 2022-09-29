@@ -352,6 +352,21 @@ class App extends React.Component {
         });
     }
 
+    undoRedoHandling = (event) => {
+        if(event.ctrlKey && event.key === "z") {
+            this.undo();
+        }
+        else if(event.ctrlKey && event.key === "Z") {
+            this.undo();
+        }
+        else if(event.ctrlKey && event.key === "y") {
+            this.redo();
+        }
+        else if(event.ctrlKey && event.key === "Y") {
+            this.redo();
+        }
+    }
+
     // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
     // TO SEE IF THEY REALLY WANT TO DELETE THE LIST
     showDeleteListModal() {
@@ -397,7 +412,10 @@ class App extends React.Component {
         let canRedo = this.tps.hasTransactionToRedo();
         let canClose = this.state.currentList !== null;
         return (
-            <div id="root">
+            <div 
+                id="root"
+                onKeyDown={this.undoRedoHandling}
+                tabIndex="1">
                 <Banner />
                 <SidebarHeading
                     createNewListCallback={this.createNewList}
