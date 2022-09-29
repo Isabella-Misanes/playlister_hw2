@@ -42,6 +42,8 @@ class App extends React.Component {
             listKeyPairMarkedForDeletion : null,
             currentList : null,
             listLoaded: false,
+            modalOpen: false,
+            listSelected: false,
             sessionData : loadedSessionData
         }
     }
@@ -82,7 +84,8 @@ class App extends React.Component {
             sessionData: {
                 nextKey: prevState.sessionData.nextKey + 1,
                 counter: prevState.sessionData.counter + 1,
-                keyNamePairs: updatedPairs
+                keyNamePairs: updatedPairs,
+                listSelected: false
             }
         }), () => {
             // PUTTING THIS NEW LIST IN PERMANENT STORAGE
@@ -120,7 +123,8 @@ class App extends React.Component {
                 nextKey: prevState.sessionData.nextKey,
                 counter: prevState.sessionData.counter - 1,
                 keyNamePairs: newKeyNamePairs
-            }
+            },
+            listSelected: false
         }), () => {
             // DELETING THE LIST FROM PERMANENT STORAGE
             // IS AN AFTER EFFECT
@@ -183,7 +187,8 @@ class App extends React.Component {
                 nextKey: prevState.sessionData.nextKey,
                 counter: prevState.sessionData.counter,
                 keyNamePairs: newKeyNamePairs
-            }
+            },
+            listSelected: false
         }), () => {
             // AN AFTER EFFECT IS THAT WE NEED TO MAKE SURE
             // THE TRANSACTION STACK IS CLEARED
@@ -200,6 +205,7 @@ class App extends React.Component {
             listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
             currentList: newCurrentList,
             listLoaded: true,
+            listSelected: true,
             sessionData: this.state.sessionData
         }), () => {
             // AN AFTER EFFECT IS THAT WE NEED TO MAKE SURE
@@ -213,6 +219,7 @@ class App extends React.Component {
             listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
             currentList: null,
             listLoaded: false,
+            listSelected: false,
             sessionData: this.state.sessionData
         }), () => {
             // AN AFTER EFFECT IS THAT WE NEED TO MAKE SURE
@@ -224,6 +231,7 @@ class App extends React.Component {
         this.setState(prevState => ({
             listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
             currentList : list,
+            listSelected: false,
             sessionData : this.state.sessionData
         }), () => {
             // UPDATING THE LIST IN PERMANENT STORAGE
@@ -320,6 +328,7 @@ class App extends React.Component {
         this.setState(prevState => ({
             currentList: prevState.currentList,
             listKeyPairMarkedForDeletion : keyPair,
+            listSelected: false,
             sessionData: prevState.sessionData
         }), () => {
             // PROMPT THE USER
@@ -331,6 +340,7 @@ class App extends React.Component {
             currentList: prevState.currentList,
             editOldSong: song,
             editSongIndex:index,
+            listSelected: false,
             sessionData: prevState.sessionData
         }), () => {
             //Show Edit Song Modal to prompt user
@@ -342,6 +352,7 @@ class App extends React.Component {
             currentList: prevState.currentList,
             oldSong: song,
             currIndex: index,
+            listSelected: false,
             sessionData: prevState.sessionData
         }), () => {
             //Show Delete Song Modal to prompt user
@@ -351,6 +362,7 @@ class App extends React.Component {
     markSongForAdding = () => {
         this.setState(prevState => ({
             currentList: prevState.currentList,
+            listSelected: false,
             sessionData: prevState.sessionData
         }), () => {
             this.addMarkedSong();
@@ -374,43 +386,71 @@ class App extends React.Component {
 
     // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
     // TO SEE IF THEY REALLY WANT TO DELETE THE LIST
-    showDeleteListModal() {
-        let modal = document.getElementById("delete-list-modal");
-        DeleteListModal.isOpen = true;
-        modal.classList.add("is-visible");
+    showDeleteListModal = () => {
+        this.setState(prevState => ({
+            listSelected: false,
+            modalOpen: true
+        }), () => {
+            let modal = document.getElementById("delete-list-modal");
+            modal.classList.add("is-visible");
+        });
     }
     //Show edit song modal
-    showEditSongModal() {
-        let modal = document.getElementById("edit-song-modal");
-        let editSongTitle = document.getElementById("song-title");
-        editSongTitle.value = this.state.editOldSong.title;
-        let editSongArtist = document.getElementById("song-artist");
-        editSongArtist.value = this.state.editOldSong.artist;
-        let editSongId = document.getElementById("song-youTubeId");
-        editSongId.value = this.state.editOldSong.youTubeId;
-        modal.classList.add("is-visible");
+    showEditSongModal = () =>{
+        this.setState(prevState => ({
+            listSelected: false,
+            modalOpen: true
+        }), () => {
+            let modal = document.getElementById("edit-song-modal");
+            let editSongTitle = document.getElementById("song-title");
+            editSongTitle.value = this.state.editOldSong.title;
+            let editSongArtist = document.getElementById("song-artist");
+            editSongArtist.value = this.state.editOldSong.artist;
+            let editSongId = document.getElementById("song-youTubeId");
+            editSongId.value = this.state.editOldSong.youTubeId;
+            modal.classList.add("is-visible");
+        });
     }
     //Show delete song modal
-    showDeleteSongModal() {
-        let modal = document.getElementById("delete-song-modal");
-        modal.classList.add("is-visible");
+    showDeleteSongModal = () =>{
+        this.setState(prevState => ({
+            listSelected: false,
+            modalOpen: true
+        }), () => {
+            let modal = document.getElementById("delete-song-modal");
+            modal.classList.add("is-visible");
+        });
     }
 
     // THIS FUNCTION IS FOR HIDING THE MODAL
-    hideDeleteListModal() {
-        let modal = document.getElementById("delete-list-modal");
-        DeleteListModal.isOpen = false;
-        modal.classList.remove("is-visible");
+    hideDeleteListModal = () => {
+        this.setState(prevState => ({
+            listSelected: false,
+            modalOpen: false
+        }), () => {
+            let modal = document.getElementById("delete-list-modal");
+            modal.classList.remove("is-visible");
+        });
     }
     //Hiding the edit song modal
-    hideEditSongModal() {
-        let modal = document.getElementById("edit-song-modal");
-        modal.classList.remove("is-visible");
+    hideEditSongModal = () => {
+        this.setState(prevState => ({
+            listSelected: false,
+            modalOpen: false
+        }), () => {
+            let modal = document.getElementById("edit-song-modal");
+            modal.classList.remove("is-visible");
+        });
     }
     //Hide delete song modal
-    hideDeleteSongModal() {
-        let modal = document.getElementById("delete-song-modal");
+    hideDeleteSongModal = () =>{
+        this.setState(prevState => ({
+            listSelected: false,
+            modalOpen: false
+        }), () => {
+            let modal = document.getElementById("delete-song-modal");
         modal.classList.remove("is-visible");
+        });
     }
 
     render() {
@@ -428,6 +468,7 @@ class App extends React.Component {
                     createNewListCallback={this.createNewList}
                     listIsLoaded={this.state.listLoaded}
                     currentList={this.state.currentList}
+                    isModalOpen={this.state.modalOpen}
                 />
                 <SidebarList
                     currentList={this.state.currentList}
@@ -446,6 +487,8 @@ class App extends React.Component {
                     redoCallback={this.redo}
                     closeCallback={this.closeCurrentList}
                     listIsLoaded={this.state.listLoaded}
+                    listIsSelected={this.state.listSelected}
+                    isModalOpen={this.state.modalOpen}
                 />
                 <PlaylistCards
                     currentList={this.state.currentList}
