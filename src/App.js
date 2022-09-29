@@ -8,6 +8,8 @@ import jsTPS from './common/jsTPS.js';
 // OUR TRANSACTIONS
 import MoveSong_Transaction from './transactions/MoveSong_Transaction.js';
 import EditSong_Transaction from './transactions/EditSong_Transaction';
+import DeleteSong_Transaction from './transactions/DeleteSong_Transaction';
+import AddSong_Transaction from './transactions/AddSong_Transaction';
 
 // THESE REACT COMPONENTS ARE MODALS
 import DeleteListModal from './components/DeleteListModal.js';
@@ -21,7 +23,6 @@ import PlaylistCards from './components/PlaylistCards.js';
 import SidebarHeading from './components/SidebarHeading.js';
 import SidebarList from './components/SidebarList.js';
 import Statusbar from './components/Statusbar.js';
-import DeleteSong_Transaction from './transactions/DeleteSong_Transaction';
 
 class App extends React.Component {
     constructor(props) {
@@ -145,6 +146,11 @@ class App extends React.Component {
         this.addDeleteSongTransaction(this.state.currIndex, this.state.oldSong);
         this.hideDeleteSongModal();
     }
+    addMarkedSong = () => {
+        console.log("Length: "+this.state.currentList.songs.length);
+        this.addSongTransaction(this.state.currentList.songs.length);
+    }
+
     // THIS FUNCTION SPECIFICALLY DELETES THE CURRENT LIST
     deleteCurrentList = () => {
         if (this.state.currentList) {
@@ -271,14 +277,19 @@ class App extends React.Component {
         this.setStateWithUpdatedList(list);
     }
 
+    addDeleteSongTransaction = (index, song) => {
+        let transaction = new DeleteSong_Transaction(this, index, song);
+        this.tps.addTransaction(transaction);
+    }
+
     addSong(index, song) {
         let list = this.state.currentList;
         list.songs.splice(index, 0, song);
         this.setStateWithUpdatedList(list);
     }
 
-    addDeleteSongTransaction = (index, song) => {
-        let transaction = new DeleteSong_Transaction(this, index, song);
+    addSongTransaction = (index) => {
+        let transaction = new AddSong_Transaction(this, index);
         this.tps.addTransaction(transaction);
     }
 
@@ -330,6 +341,14 @@ class App extends React.Component {
         }), () => {
             //Show Delete Song Modal to prompt user
             this.showDeleteSongModal();
+        });
+    }
+    markSongForAdding = () => {
+        this.setState(prevState => ({
+            currentList: prevState.currentList,
+            sessionData: prevState.sessionData
+        }), () => {
+            this.addMarkedSong();
         });
     }
 
@@ -395,7 +414,7 @@ class App extends React.Component {
                     canUndo={canUndo}
                     canRedo={canRedo}
                     canClose={canClose} 
-                    //addSongCallback={this.__}
+                    addSongCallback={this.markSongForAdding}
                     undoCallback={this.undo}
                     redoCallback={this.redo}
                     closeCallback={this.closeCurrentList}
