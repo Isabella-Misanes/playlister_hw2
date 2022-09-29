@@ -41,6 +41,7 @@ class App extends React.Component {
         this.state = {
             listKeyPairMarkedForDeletion : null,
             currentList : null,
+            listLoaded: false,
             sessionData : loadedSessionData
         }
     }
@@ -147,8 +148,10 @@ class App extends React.Component {
         this.hideDeleteSongModal();
     }
     addMarkedSong = () => {
-        console.log("Length: "+this.state.currentList.songs.length);
-        this.addSongTransaction(this.state.currentList.songs.length);
+        if(this.state.currentList) {
+            console.log("Length: "+this.state.currentList.songs.length);
+            this.addSongTransaction(this.state.currentList.songs.length);
+        }
     }
 
     // THIS FUNCTION SPECIFICALLY DELETES THE CURRENT LIST
@@ -196,6 +199,7 @@ class App extends React.Component {
         this.setState(prevState => ({
             listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
             currentList: newCurrentList,
+            listLoaded: true,
             sessionData: this.state.sessionData
         }), () => {
             // AN AFTER EFFECT IS THAT WE NEED TO MAKE SURE
@@ -208,6 +212,7 @@ class App extends React.Component {
         this.setState(prevState => ({
             listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
             currentList: null,
+            listLoaded: false,
             sessionData: this.state.sessionData
         }), () => {
             // AN AFTER EFFECT IS THAT WE NEED TO MAKE SURE
@@ -371,6 +376,7 @@ class App extends React.Component {
     // TO SEE IF THEY REALLY WANT TO DELETE THE LIST
     showDeleteListModal() {
         let modal = document.getElementById("delete-list-modal");
+        DeleteListModal.isOpen = true;
         modal.classList.add("is-visible");
     }
     //Show edit song modal
@@ -393,6 +399,7 @@ class App extends React.Component {
     // THIS FUNCTION IS FOR HIDING THE MODAL
     hideDeleteListModal() {
         let modal = document.getElementById("delete-list-modal");
+        DeleteListModal.isOpen = false;
         modal.classList.remove("is-visible");
     }
     //Hiding the edit song modal
@@ -419,6 +426,8 @@ class App extends React.Component {
                 <Banner />
                 <SidebarHeading
                     createNewListCallback={this.createNewList}
+                    listIsLoaded={this.state.listLoaded}
+                    currentList={this.state.currentList}
                 />
                 <SidebarList
                     currentList={this.state.currentList}
@@ -436,6 +445,7 @@ class App extends React.Component {
                     undoCallback={this.undo}
                     redoCallback={this.redo}
                     closeCallback={this.closeCurrentList}
+                    listIsLoaded={this.state.listLoaded}
                 />
                 <PlaylistCards
                     currentList={this.state.currentList}
