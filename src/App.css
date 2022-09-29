@@ -109,7 +109,8 @@ body {
 }
 
 .list-card, .selected-list-card, .unselected-list-card {
-  font-size: 18pt;
+  font-size: 24pt;
+  font-weight: bold;
   margin: 10px;
   padding: 20px;
   border-radius: 25px;
@@ -136,7 +137,7 @@ body {
 }
 
 .song-card {
-  font-size: 18pt;
+  font-size: 20pt;
   margin: 10px;
   padding: 20px;
   border-radius: 25px;
@@ -183,7 +184,7 @@ body {
 }
 
 input {
-  font-size:20pt;
+  font-size:16pt;
 }
 
 
@@ -231,7 +232,7 @@ input {
 }
 
 .modal-north {
-  font-size:32pt;
+  font-size:28pt;
   font-weight: bold;
   background-color: #669966;
   color:white;
@@ -242,7 +243,7 @@ input {
   grid-template-columns: 30% 65%;
   grid-template-rows: 33% 33% 33%;
   gap: 10px 20px;
-  font-size: 48pt;
+  font-size: 28pt;
 }
 
 span {
